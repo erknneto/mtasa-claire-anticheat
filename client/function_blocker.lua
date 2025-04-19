@@ -49,6 +49,11 @@ claireRegisterOnSettingsReady(function()
             return "skip"
         end
 
+        if fn == "setElementOnFire" or fn == "createProjectile" or fn == "createExplosion" or fn == "blowVehicle" then
+            triggerServerEvent("clairePunish", localPlayer, "Claire: Blocked function: " .. fn)
+            return "skip"
+        end
+
         if fn == "triggerServerEvent" or fn == "triggerEvent" then
             tCount = tCount + 1
             if tCount >= 50 then
