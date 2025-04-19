@@ -22,8 +22,6 @@ Claire currently includes over 20 independent detection modules, covering moveme
 
 False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is around 95%, based on extensive stress simulations and edge case testing.
 
-Compared to other anticheats available for MTA:SA, Claire introduces a cleaner structure, centralized punishment handling, and deeper client-side monitoring — including protections against variable tampering, wallhacks, and blocked screenshots.
-
 Below is a full list of current features and their real-world reliability:
 
 | Feature                        | Description                                                                                           | Confiability |
