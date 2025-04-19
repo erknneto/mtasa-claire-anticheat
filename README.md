@@ -16,34 +16,40 @@ Claire currently includes over 20 independent detection modules, covering moveme
 
 Below is a full list of current features and their real-world reliability:
 
-| Feature                        | Description                                                                                           | Confiability |
-| :-----------------------------| :------------------------------------------------------------------------------------------------------| :------------|
-| Event spam detection        | Detects abuse of client-triggered events by monitoring spam thresholds and invalid events.            | 95%          |
-| Explosion spam detection    | Detects excessive explosions that could indicate abuse of projectile or weapon-based hacks.           | 99%          |
-| Function blocker            | Blocks dangerous Lua functions (loadstring, setElementData, triggerEvent, etc.) used by cheats.| 90%         |
-| Projectile detection        | Detects illegitimate projectile creation, including grenades and RPGs spawned via cheats.             | 100%         |
-| Jetpack blocker             | Blocks unauthorized usage of jetpacks outside legal game mechanics or maps.                           | 100%         |
-| Weapon whitelist enforcement| Blocks forbidden weapon IDs, especially weapons not meant for players or too powerful.                | 100%         |
-| Spoofcheck (resource)       | Verifies that client loaded the correct meta.xml and that no spoofing occurred.                       | 95%          |
-| Fast fire detection         | Detects weapons being fired faster than their allowed intervals (e.g., rapid-fire macros).            | 90%          |
-| Aimbot detection            | Detects inhuman hit accuracy using heuristic analysis of damage and hit ratios.                       | 95%          |
-| Ping monitoring             | Detects players with excessively high ping or unstable packet loss.                                   | 95%          |
-| VPN/proxy detection         | Detects players using VPNs, proxies or hosting networks using external APIs.                          | 85%          |
-| Serial spoof detection      | Heuristically detects fake or spoofed serials to bypass bans or impersonate others.                   | 85%          |
-| Noclip detection            | Detects ghost-like movement or floating in air without legit ground support.                          | 95%          |
-| Godmode detection           | Detects players who ignore damage or have infinite health, including in vehicles.                     | 100%         |
-| Speedhack detection         | Detects abnormal foot or vehicle speeds exceeding configured thresholds.                              | 90%          |
-| Movement analyzer           | Detects repetitive jump spam (bunnyhopping) based on intervals and scores.                            | 95%          |
-| Teleport detection           | Detects sudden position changes or vehicle warps beyond natural movement thresholds.                            | 93%          |
-| ElementData protection      | Prevents client from modifying sensitive element data such as godmode, admin, etc.                    | 95%          |
-| Client variable watcher     | Detects modifications to known dangerous variables often toggled by cheats.                           | 90%          |
-| World scanner               | Detects invisible models or replaced world elements that hide players or walls.                       | 90%          |
-| Wallhack scanner            | Detects removal of collisions or wall models replaced with invisible versions.                        | 85%          |
-| Vehicle type whitelist      | Prevents usage of absurd or abuse-prone vehicles (Hydra, Rhino, Andromada, etc.)                      | 100%         |
-| Windowed mode detection     | Detects usage of windowed mode to block potential screen recorders or overlays.                       | 100%         |
-| Screenshot blocker detection| Detects if the player has disabled MTA screenshots.                            | 100%         |
+| Feature                      | Description                                                                                             | Confiability |
+|-----------------------------|---------------------------------------------------------------------------------------------------------|--------------|
+| Event spam detection         | Detects abuse of client-triggered events by monitoring spam thresholds and invalid events.             | 95%          |
+| Explosion spam detection     | Detects excessive explosions that could indicate abuse of projectile or weapon-based hacks.            | 99%          |
+| Function blocker             | Blocks dangerous Lua functions (e.g., `loadstring`, `triggerEvent`, `setElementData`) and prevents client tampering. | 90%          |
+| GUI/Paste injection guard    | Detects pasting or typing of dangerous functions into GUI inputs or chatboxes.                         | 90%          |
+| Lua environment integrity    | Detects corruption or tampering in the global `_G` environment (e.g., using exploit loaders).           | 98%          |
+| Anti-loadstring trap         | Instantly intercepts attempts to execute Lua dynamically via `loadstring`, `load`, or `pcall`.          | 100%         |
+| Resource shutdown detection  | Prevents attempts to stop Claire or other resources via malicious code.                                | 100%         |
+| Fast fire detection          | Detects weapons being fired faster than allowed (macro or triggerbot).                                 | 90%          |
+| Aimbot detection             | Uses heuristic analysis to detect inhuman aim accuracy (silent aim, lockbots).                         | 95%          |
+| Godmode detection            | Detects infinite health, blocked damage, or unchanging HP even after hits (ped + vehicle).             | 100%         |
+| Jetpack blocker              | Prevents unauthorized use of jetpacks not given by legitimate mechanics.                               | 100%         |
+| Weapon whitelist enforcement | Blocks usage of forbidden weapon IDs not allowed on the server.                                        | 100%         |
+| Projectile detection         | Detects client-side creation of explosives or rockets via cheats.                                     | 100%         |
+| Spoofcheck (resource)        | Verifies that the client has loaded the correct meta.xml and scripts to prevent spoofing.              | 95%          |
+| Teleport detection           | Detects sudden position changes, including vehicle warps or warps into distant vehicles.              | 93%          |
+| Noclip / Fly detection       | Detects floating, hovering, or moving in the air without proper ground or task support.                | 95%          |
+| Movement analyzer            | Detects repetitive jump abuse (bunnyhopping) using frame-based timing and jump frequency.              | 95%          |
+| Ping monitoring              | Monitors for excessively high ping or severe packet loss over time.                                   | 95%          |
+| VPN / Proxy detection        | Uses an external API to detect players using VPNs, proxies or hosting services.                        | 85%          |
+| Serial spoof detection       | Heuristically detects invalid or spoofed serials based on system patterns.                             | 85%          |
+| Screenshot blocker detection | Detects if the player has disabled screenshot functionality via `takePlayerScreenShot`.                | 100%         |
+| Windowed mode detection      | Detects whether the player is running the game in windowed mode (if disallowed in config).             | 100%         |
+| World property enforcement   | Resets and monitors `setWorldSpecialPropertyEnabled`, `setGameSpeed`, and `setGravity` for consistency. | 100%         |
+| ElementData protection       | Prevents client from modifying sensitive server-only element data (e.g. godmode, admin, vip).           | 95%          |
+| Client variable watcher      | Detects changes to known cheating-related `setElementData` variables on the client side.                | 90%          |
+| Vehicle type whitelist       | Prevents usage of powerful or abuse-prone vehicles like Hydra, Rhino, Andromada, etc.                  | 100%         |
+| Wallhack scanner             | Detects invisible models or missing collisions that may indicate wallhacks or map edits.               | 85%          |
+| World scanner                | Detects altered game properties, occlusion flags, gravity manipulation, and speed hacks.               | 90%          |
 
 ## 📦 Installation
+
+👉 download from MTA Community: [resource - updated 2025/04/19](https://community.multitheftauto.com/index.php?p=resources&s=details&id=18996)
 
 👉 download from Google Drive: [resource - updated 2025/04/19](https://drive.google.com/file/d/1NQKBaii3_pZCexenCpIw_fqlFQ_CyEA_/view?usp=sharing)
 
