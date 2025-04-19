@@ -16,8 +16,6 @@ Cheating has become increasingly common in MTA:SA, and there's a growing need fo
 
 By being fully open-source, Claire gives server owners an accessible and transparent tool to detect common exploits and improve their server environment. But more than that, it invites collaboration. The idea is that, together — through testing, feedback, improvements, and shared knowledge — we can create a more solid, trustworthy anticheat system that benefits the entire MTA community.
 
-Security should not be a luxury or a mystery. It should be something we build together.
-
 # **🛡️ Current features**
 
 Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact.
