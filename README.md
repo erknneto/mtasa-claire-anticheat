@@ -1,13 +1,15 @@
 
 # **🔰 MTA:SA - Claire Anticheat**
 
-Claire is a modular anticheat system for MTA:SA, designed to help improve the overall quality and fairness of multiplayer servers. The idea is simple: organize detections into clean, independent modules, make the system easy to configure, and open it up so more people can contribute.
+Claire is a modular, lightweight anticheat system for MTA:SA, designed to improve the integrity and fairness of multiplayer servers. Its core philosophy is simple: organize detections into clean, independent modules, make them easy to configure, and build an open platform that others can expand and improve.
 
-The project started as a collaboration between a few developers — combining real server experience with support from AI to speed up development and keep things structured. From the start, the goal has been to build something useful not just for one server, but for the wider MTA community.
+Claire runs silently in the background, acting as a guardian layer — constantly monitoring player behavior, network conditions, and client-side integrity without interfering with gameplay or degrading performance. Its design favors discretion and precision, targeting cheats without disrupting legitimate users.
 
-Claire is still in active development. It's not perfect — and it doesn’t try to be. But it’s open-source, easy to extend, and built with long-term maintainability in mind. Contributions, feedback, and constructive criticism are not only welcome, but essential to make this project better over time.
+But Claire is more than just a list of static rules — it’s a behavioral firewall. It combines heuristic analysis, score-based detection, environmental scanning, and execution monitoring to catch both common and sophisticated cheats in real-world conditions. Claire doesn't aim to be perfect — it aims to be useful. It’s still under active development, and while it’s not flawless, it’s fully open-source, extensible, and built with long-term maintainability in mind. Feedback, contributions, and constructive criticism are not only welcome — they’re essential.
 
-If you're running an MTA:SA server and looking for a solid base to start protecting it, Claire might be a good starting point.
+The project began as a collaboration between developers with real-world server experience, combining human expertise with AI-assisted structure and speed. From day one, the goal has been to create something that benefits not just one server, but the broader MTA community.
+
+If you're looking for a solid, customizable foundation to secure your MTA:SA server, Claire is ready to help.
 
 # **❓ Why does it matter?**
 Cheating has become increasingly common in MTA:SA, and there's a growing need for servers to protect themselves in a reliable and sustainable way. Claire was created to address that — not as a closed or private solution, but as something open to everyone.
@@ -17,6 +19,14 @@ By being fully open-source, Claire gives server owners an accessible and transpa
 Security should not be a luxury or a mystery. It should be something we build together.
 
 # **🛡️ Current features**
+
+Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact.
+
+False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is around 95%, based on extensive stress simulations and edge case testing.
+
+Compared to other anticheats available for MTA:SA, Claire introduces a cleaner structure, centralized punishment handling, and deeper client-side monitoring — including protections against variable tampering, wallhacks, and blocked screenshots.
+
+Below is a full list of current features and their real-world reliability:
 
 | Feature                        | Description                                                                                           | Confiability |
 | :-----------------------------| :------------------------------------------------------------------------------------------------------| :------------|
