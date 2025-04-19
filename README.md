@@ -42,6 +42,7 @@ Below is a full list of current features and their real-world reliability:
 | Godmode detection           | Detects players who ignore damage or have infinite health, including in vehicles.                     | 100%         |
 | Speedhack detection         | Detects abnormal foot or vehicle speeds exceeding configured thresholds.                              | 90%          |
 | Movement analyzer           | Detects repetitive jump spam (bunnyhopping) based on intervals and scores.                            | 95%          |
+| Teleport detection           | Detects sudden position changes or vehicle warps beyond natural movement thresholds.                            | 93%          |
 | ElementData protection      | Prevents client from modifying sensitive element data such as godmode, admin, etc.                    | 95%          |
 | Client variable watcher     | Detects modifications to known dangerous variables often toggled by cheats.                           | 90%          |
 | World scanner               | Detects invisible models or replaced world elements that hide players or walls.                       | 90%          |
@@ -66,5 +67,5 @@ Open `config.lua` to enable/disable modules and adjust tolerances, every setting
 Claire is aimed to be an open-source project. Feel free to contribute with PRs, reports, or suggestions.
 
 <p align="center">
-  <img src="https://i.imgur.com/Q5ixtO8.png" alt="MTA:SA - Claire Anticheat" width="500">
+  <img src="https://i.imgur.com/Q5ixtO8.png" alt="MTA:SA - Claire Anticheat" width="700">
 </p>
