@@ -5,7 +5,7 @@
     <download_priority_group>9999</download_priority_group>
     
     <!-- Shared -->
-    <script src="whitelist.lua" type="shared" />
+    <script src="whitelist.lua" type="shared" cache="false" />
     
     <!-- Client-side -->
     <script src="client/core.lua" type="client" cache="false" />
