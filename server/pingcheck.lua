@@ -2,15 +2,20 @@ local maxPing = returnClaireSetting("pingMax") or 400
 local pingTolerance = returnClaireSetting("pingTolerance") or 5
 local packetLossMax = returnClaireSetting("packetLossMax") or 0.15
 local packetLossTolerance = returnClaireSetting("packetLossTolerance") or 3
+local gracePeriod = 10000
+local joinTimestamps = {}
 
 local pingViolations = {}
 local lossViolations = {}
 
 if returnClaireSetting("pingDetection") then
 
+    addEventHandler("onPlayerJoin", root, function()
+        joinTimestamps[source] = getTickCount()
+    end)
+
     function checkPlayerPing(player)
         if not isElement(player) then return end
-
         local serial = getPlayerSerial(player)
         if isSerialWhitelisted(serial) then return end
 
@@ -32,9 +37,11 @@ if returnClaireSetting("pingDetection") then
 
     function checkPlayerPacketLoss(player)
         if not isElement(player) then return end
-
         local serial = getPlayerSerial(player)
         if isSerialWhitelisted(serial) then return end
+
+        local joinTime = joinTimestamps[player]
+        if joinTime and getTickCount() - joinTime < gracePeriod then return end
 
         local stats = getNetworkStats(player)
         if not stats then return end
