@@ -1,6 +1,6 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("teleportDetection") then return end
-	
+
     local maxDistance = returnClaireSetting("teleportMaxDistance") or 50
     local tolerance = returnClaireSetting("teleportTolerance") or 2
     local graceAfterSpawn = returnClaireSetting("teleportGraceAfterSpawn") or 5000
@@ -54,7 +54,8 @@ claireRegisterOnSettingsReady(function()
                 local vehicle = getPedOccupiedVehicle(localPlayer)
                 if isElement(vehicle) then
                     local _, _, vzVeh = getElementVelocity(vehicle)
-                    isFalling = vzVeh < vzThreshold
+                    local onGround = isVehicleOnGround(vehicle)
+                    isFalling = vzVeh < vzThreshold and not onGround
                 end
             else
                 isFalling = vz < vzThreshold and not isPedOnGround(localPlayer)
