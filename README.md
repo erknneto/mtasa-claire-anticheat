@@ -12,9 +12,9 @@ Cheating has become increasingly common in MTA:SA, and there's a growing need fo
 
 # **🛡️ Current features**
 
-Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact. False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is around 95%, based on extensive stress simulations and edge case testing.
+Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact. False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is expected to be around 95%, based on case testing.
 
-Below is a full list of current features and their real-world reliability:
+Below is a full list of current features and their expected reliability:
 
 | Feature                      | Description                                                                                             | Confiability |
 |-----------------------------|---------------------------------------------------------------------------------------------------------|--------------|
