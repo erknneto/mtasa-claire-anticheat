@@ -50,9 +50,9 @@ Below is a full list of current features and their expected reliability:
 
 ## 📦 Installation
 
-👉 download from MTA Community: [resource - updated 2025/04/19](https://community.multitheftauto.com/index.php?p=resources&s=details&id=18996)
+👉 download from MTA Community: [resource - updated 2025/04/20](https://community.multitheftauto.com/index.php?p=resources&s=details&id=18996)
 
-👉 download from Google Drive: [resource - updated 2025/04/19](https://drive.google.com/file/d/1NQKBaii3_pZCexenCpIw_fqlFQ_CyEA_/view?usp=sharing)
+👉 download from Google Drive: [resource - updated 2025/04/20](https://drive.google.com/file/d/1NQKBaii3_pZCexenCpIw_fqlFQ_CyEA_/view?usp=sharing)
 
 👉 download from GitHub: [source-code - always up-to-date](https://github.com/erknneto/mtasa-claire-anticheat/archive/refs/heads/main.zip)
 
