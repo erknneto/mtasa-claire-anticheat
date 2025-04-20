@@ -5,7 +5,7 @@ Claire is a modular, lightweight anticheat system for MTA:SA, designed to improv
 
 Claire runs silently in the background, acting as a guardian layer — constantly monitoring player behavior, network conditions, and client-side integrity without interfering with gameplay or degrading performance. Its design favors discretion and precision, targeting cheats without disrupting legitimate users.
 
-If you're looking for a solid, customizable foundation to secure your MTA:SA server, Claire is ready to help.
+If you're looking for a solid, customizable way to secure your MTA:SA server, Claire is ready to help.
 
 # **❓ Why does it matter?**
 Cheating has become increasingly common in MTA:SA, and there's a growing need for servers to protect themselves in a reliable and sustainable way. Claire was created to address that — not as a closed or private solution, but as something open to everyone. By being fully open-source, Claire gives server owners an accessible and transparent tool to detect common exploits and improve their server environment. But more than that, it invites collaboration. The idea is that, together — through testing, feedback, improvements, and shared knowledge — we can create a more solid, trustworthy anticheat system that benefits the entire MTA community.
