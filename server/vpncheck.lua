@@ -4,7 +4,17 @@ if returnClaireSetting("vpnDetection") then
     function checkVPN(player)
         if not isElement(player) then return end
         local ip = getPlayerIP(player)
-        if not ip or checkedIPs[ip] then return end
+        if not ip then return end
+
+        local record = checkedIPs[ip]
+        if record then
+            if record.status == "blocked" then
+                clairePunish(player, "Claire: VPN/Proxy usage detected (cached)")
+                return
+            elseif record.status == "clean" then
+                return
+            end
+        end
 
         fetchRemote("http://ip-api.com/json/" .. ip .. "?fields=status,message,query,isp,proxy,hosting",
             function(error, result)
@@ -15,8 +25,10 @@ if returnClaireSetting("vpnDetection") then
                 if not data or data.status ~= "success" then return end
 
                 if data.proxy or data.hosting then
-                    checkedIPs[ip] = true
+                    checkedIPs[ip] = { status = "blocked" }
                     clairePunish(player, "Claire: VPN/Proxy usage detected")
+                else
+                    checkedIPs[ip] = { status = "clean" }
                 end
             end, "", false
         )
