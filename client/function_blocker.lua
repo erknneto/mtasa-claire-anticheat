@@ -33,7 +33,7 @@ claireRegisterOnSettingsReady(function()
         "setElementHealth", "setPedArmor", "loadstring", "load", "pcall",
         "dofile", "assert", "collectgarbage", "getfenv", "setfenv", "debug",
         "_G", "_ENV", "rawget", "rawset", "stopResource", "restartResource",
-        "getResourceFromName", "getResourceState"
+        "getResourceFromName", "getResourceState", "startResource"
     }
 
     addDebugHook("preFunction", function(_, fn)
@@ -44,7 +44,7 @@ claireRegisterOnSettingsReady(function()
             return "skip"
         end
 
-        if fn == "stopResource" or fn == "restartResource" or fn == "getResourceState" or fn == "getResourceFromName" then
+        if fn == "stopResource" or fn == "restartResource" or fn == "startResource" then
             triggerServerEvent("clairePunish", localPlayer, "Claire: Attempted to manipulate resource state (" .. fn .. ")")
             return "skip"
         end

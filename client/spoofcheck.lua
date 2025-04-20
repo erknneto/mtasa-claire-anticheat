@@ -1,8 +1,8 @@
-local receivedExpectedScripts = {}
-local scriptsReady = false
-
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("spoofCheckDetection") then return end
+	
+	local receivedExpectedScripts = {}
+	local scriptsReady = false
 
     setTimer(function()
         if not scriptsReady then
