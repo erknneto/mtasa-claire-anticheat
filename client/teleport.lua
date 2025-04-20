@@ -1,17 +1,17 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("teleportDetection") then return end
 	
-	local maxDistance = returnClaireSetting("teleportMaxDistance") or 50
-	local tolerance = returnClaireSetting("teleportTolerance") or 2
-	local graceAfterSpawn = returnClaireSetting("teleportGraceAfterSpawn") or 5000
+    local maxDistance = returnClaireSetting("teleportMaxDistance") or 50
+    local tolerance = returnClaireSetting("teleportTolerance") or 2
+    local graceAfterSpawn = returnClaireSetting("teleportGraceAfterSpawn") or 5000
 
-	local teleportScore = 0
-	local lastSent = 0
-	local lastPlayerPosition = nil
-	local lastVehiclePosition = nil
-	local lastSpawnTime = getTickCount()
-	local enteringDistantVehicle = false
-	local stillFrames = 0
+    local teleportScore = 0
+    local lastSent = 0
+    local lastPlayerPosition = nil
+    local lastVehiclePosition = nil
+    local lastSpawnTime = getTickCount()
+    local enteringDistantVehicle = false
+    local stillFrames = 0
 
     local function resetTeleportState()
         teleportScore = 0
@@ -46,9 +46,22 @@ claireRegisterOnSettingsReady(function()
         local inVehicle = isPedInVehicle(localPlayer)
         local x, y, z = getElementPosition(localPlayer)
         local _, _, vz = getElementVelocity(localPlayer)
-        local falling = (vz < -0.3 and not isPedOnGround(localPlayer) and not inVehicle and not isPedWearingJetpack(localPlayer) and not isElementInWater(localPlayer))
 
-        if falling or isPedWearingJetpack(localPlayer) or isElementInWater(localPlayer) then return end
+        local isFalling = false
+        if not isPedWearingJetpack(localPlayer) and not isElementInWater(localPlayer) then
+            local vzThreshold = -0.4
+            if inVehicle then
+                local vehicle = getPedOccupiedVehicle(localPlayer)
+                if isElement(vehicle) then
+                    local _, _, vzVeh = getElementVelocity(vehicle)
+                    isFalling = vzVeh < vzThreshold
+                end
+            else
+                isFalling = vz < vzThreshold and not isPedOnGround(localPlayer)
+            end
+        end
+
+        if isFalling then return end
 
         local distance = 0
         if lastPlayerPosition then
