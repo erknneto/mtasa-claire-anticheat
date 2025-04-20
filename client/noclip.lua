@@ -1,15 +1,17 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("noclipDetection") then return end
-	
-	local minHeight = returnClaireSetting("noclipDetectionMinHeight") or 7
-	local maxScore = returnClaireSetting("noclipDetectionMaxScore") or 5
-	local moveScoreLimit = returnClaireSetting("noclipDetectionMoveScore") or 6
 
-	local score = 0
-	local moveScore = 0
-	local lastSent = 0
-	local lastPosition = nil
-	local stillFrames = 0
+    local minHeight = returnClaireSetting("noclipDetectionMinHeight") or 7
+    local maxScore = returnClaireSetting("noclipDetectionMaxScore") or 5
+    local moveScoreLimit = returnClaireSetting("noclipDetectionMoveScore") or 6
+
+    local score = 0
+    local moveScore = 0
+    local lastSent = 0
+    local lastPosition = nil
+    local stillFrames = 0
+    local noGroundFrames = 0
+    local airDistance = 0.0
 
     setTimer(function()
         local x, y, z = getElementPosition(localPlayer)
@@ -19,6 +21,8 @@ claireRegisterOnSettingsReady(function()
             score = 0
             moveScore = 0
             stillFrames = 0
+            noGroundFrames = 0
+            airDistance = 0.0
             return
         end
 
@@ -27,6 +31,8 @@ claireRegisterOnSettingsReady(function()
             score = 0
             moveScore = 0
             stillFrames = 0
+            noGroundFrames = 0
+            airDistance = 0.0
             return
         end
 
@@ -34,6 +40,8 @@ claireRegisterOnSettingsReady(function()
             score = 0
             moveScore = 0
             stillFrames = 0
+            noGroundFrames = 0
+            airDistance = 0.0
             return
         end
 
@@ -43,39 +51,65 @@ claireRegisterOnSettingsReady(function()
             hasGroundSupport = hit and hitElement
         end
 
-        local moving = false
-        if lastPosition then
-            local dx = x - lastPosition[1]
-            local dy = y - lastPosition[2]
-            local dist = math.sqrt(dx * dx + dy * dy)
-            moving = dist > 0.1
-
-            if not moving and math.abs(vz) < 0.01 and hasGroundSupport then
-                stillFrames = stillFrames + 1
-                if stillFrames >= 3 then
-                    score = 0
-                    moveScore = 0
-                    stillFrames = 0
-                    return
-                end
-            else
-                stillFrames = 0
-            end
+        if not hasGroundSupport then
+            noGroundFrames = noGroundFrames + 1
+        else
+            noGroundFrames = 0
+            airDistance = 0.0
         end
-        lastPosition = {x, y}
 
-        if hasGroundSupport then
+        if noGroundFrames < 4 then
             score = 0
             moveScore = 0
+            stillFrames = 0
             return
         end
 
-        if moving then
-            moveScore = moveScore + 1
+        local moving = false
+        local frameDist = 0
+        if lastPosition then
+            local dx = x - lastPosition[1]
+            local dy = y - lastPosition[2]
+            frameDist = math.sqrt(dx * dx + dy * dy)
+            moving = frameDist > 0.1
+        end
+        lastPosition = {x, y}
+
+        if not hasGroundSupport and frameDist > 0 then
+            airDistance = airDistance + frameDist
+        end
+
+        -- reset if touching ground again
+        if hasGroundSupport then
             score = 0
-        else
-            score = score + 1
             moveScore = 0
+            stillFrames = 0
+            airDistance = 0.0
+            return
+        end
+
+        -- still + grounded = not noclip
+        if not moving and math.abs(vz) < 0.01 and hasGroundSupport then
+            stillFrames = stillFrames + 1
+            if stillFrames >= 3 then
+                score = 0
+                moveScore = 0
+                stillFrames = 0
+                return
+            end
+        else
+            stillFrames = 0
+        end
+
+        -- delayed scoring only if time in air already accumulated
+        if noGroundFrames >= 4 then
+            if moving then
+                moveScore = moveScore + 1
+                score = 0
+            else
+                score = score + 1
+                moveScore = 0
+            end
         end
 
         if (score >= maxScore or moveScore >= moveScoreLimit) and getTickCount() - lastSent > 1000 then

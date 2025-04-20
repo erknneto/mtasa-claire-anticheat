@@ -12,6 +12,8 @@ claireRegisterOnSettingsReady(function()
     local lastSpawnTime = getTickCount()
     local enteringDistantVehicle = false
     local stillFrames = 0
+    local lastFallTime = 0
+    local vehicleFallCooldown = 2000
 
     local function resetTeleportState()
         teleportScore = 0
@@ -19,6 +21,7 @@ claireRegisterOnSettingsReady(function()
         lastVehiclePosition = nil
         enteringDistantVehicle = false
         stillFrames = 0
+        lastFallTime = 0
     end
 
     addEventHandler("onClientPlayerWasted", localPlayer, resetTeleportState)
@@ -55,6 +58,9 @@ claireRegisterOnSettingsReady(function()
                 if isElement(vehicle) then
                     local _, _, vzVeh = getElementVelocity(vehicle)
                     local onGround = isVehicleOnGround(vehicle)
+                    if vzVeh < vzThreshold and not onGround then
+                        lastFallTime = now
+                    end
                     isFalling = vzVeh < vzThreshold and not onGround
                 end
             else
@@ -89,7 +95,7 @@ claireRegisterOnSettingsReady(function()
             if isElement(vehicle) then
                 local vx, vy, vz = getElementPosition(vehicle)
 
-                if lastVehiclePosition then
+                if lastVehiclePosition and now - lastFallTime > vehicleFallCooldown then
                     local vdx = vx - lastVehiclePosition[1]
                     local vdy = vy - lastVehiclePosition[2]
                     local vdz = vz - lastVehiclePosition[3]

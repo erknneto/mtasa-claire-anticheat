@@ -1,15 +1,15 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("movementAnalyzer") then return end
 	
-	local score = 0
-	local maxScore = returnClaireSetting("movementAnalyzerMaxScore") or 6
-	local jumpInterval = returnClaireSetting("movementAnalyzerJumpInterval") or 800
-	local resetFrames = returnClaireSetting("movementAnalyzerResetFrames") or 5
+    local score = 0
+    local maxScore = returnClaireSetting("movementAnalyzerMaxScore") or 6
+    local jumpInterval = returnClaireSetting("movementAnalyzerJumpInterval") or 800
+    local resetFrames = returnClaireSetting("movementAnalyzerResetFrames") or 5
 
-	local lastJumpTick = 0
-	local lastSent = 0
-	local stillFrames = 0
-	local lastPosition = nil
+    local lastJumpTick = 0
+    local lastSent = 0
+    local stillFrames = 0
+    local lastPosition = nil
 
     setTimer(function()
         local x, y, z = getElementPosition(localPlayer)
@@ -17,8 +17,14 @@ claireRegisterOnSettingsReady(function()
         local onGround = isPedOnGround(localPlayer)
         local now = getTickCount()
 
+        if isElementInWater(localPlayer) then
+            score = 0
+            stillFrames = 0
+            return
+        end
+
         local jumping = getPedControlState("jump")
-        local jumped = jumping and vz > 0.1 and not onGround
+        local jumped = jumping and vz > 0.15 and not onGround
 
         local moving = false
         if lastPosition then
@@ -29,8 +35,8 @@ claireRegisterOnSettingsReady(function()
         end
         lastPosition = {x, y}
 
-        if jumped then
-            if now - lastJumpTick < jumpInterval and moving then
+        if jumped and moving then
+            if now - lastJumpTick < jumpInterval then
                 score = score + 1
             end
             lastJumpTick = now
