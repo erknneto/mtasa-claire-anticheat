@@ -1,5 +1,5 @@
 <meta>
-    <info author="Erknneto" version="1" name="Claire" description="An anticheat for MTA:SA" type="script" />
+    <info author="Erknneto" version="1.1" name="Claire" description="An anticheat for MTA:SA" type="script" />
     <min_mta_version server="1.6.0-9.22459" client="1.6.0-9.21695"></min_mta_version>
     
     <download_priority_group>9999</download_priority_group>
