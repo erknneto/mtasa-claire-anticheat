@@ -53,13 +53,6 @@ claireRegisterOnSettingsReady(function()
             triggerServerEvent("clairePunish", localPlayer, "Claire: Blocked function: " .. fn)
             return "skip"
         end
-
-        if fn == "triggerServerEvent" or fn == "triggerEvent" then
-            tCount = tCount + 1
-            if tCount >= 50 then
-                triggerServerEvent("clairePunish", localPlayer, "Claire: Excessive event usage")
-            end
-        end
     end)
 
     addEventHandler("onClientPaste", root, function(text)
