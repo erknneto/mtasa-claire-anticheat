@@ -1,17 +1,25 @@
 local hitRateThreshold = returnClaireSetting("aimbotHitRateThreshold") or 0.9
 local minShots = returnClaireSetting("aimbotMinShots") or 50
 local tolerance = returnClaireSetting("aimbotTolerance") or 3
+local decayFactor = returnClaireSetting("aimbotDecayFactor") or 0.8
+local decayInterval = returnClaireSetting("aimbotDecayInterval") or 60000
 
 local playerStats = {}
 local lastShotTime = {}
 
 if returnClaireSetting("aimbotDetection") then
 
-    function resetIfIdle(player)
+    function applyDecay(player)
+        local stats = playerStats[player]
+        if not stats then return end
+
         local last = lastShotTime[player]
-        if last and (getTickCount() - last > 60000) then
-            playerStats[player] = nil
-            lastShotTime[player] = nil
+        if last and (getTickCount() - last > decayInterval) then
+            stats.shots = math.floor(stats.shots * decayFactor)
+            stats.hits = math.floor(stats.hits * decayFactor)
+            stats.violations = math.max(0, stats.violations - 1)
+            stats.totalRecentShots = math.floor(stats.totalRecentShots * decayFactor)
+            stats.recentSuspicious = false
         end
     end
 
@@ -20,7 +28,7 @@ if returnClaireSetting("aimbotDetection") then
         local serial = getPlayerSerial(source)
         if isSerialWhitelisted(serial) then return end
 
-        resetIfIdle(source)
+        applyDecay(source)
 
         local stats = playerStats[source] or {
             shots = 0, hits = 0,
