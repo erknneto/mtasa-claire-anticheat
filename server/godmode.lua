@@ -1,98 +1,109 @@
-local tolerance = returnClaireSetting("godmodeTolerance") or 3
-local vehicleMinThreshold = returnClaireSetting("godmodeVehicleMinThreshold") or 950
+local tolerance               = tonumber(returnClaireSetting("godmodeTolerance")) or 3
+local vehicleMinThreshold    = tonumber(returnClaireSetting("godmodeVehicleMinThreshold")) or 950
+local eps                    = 0.05
 
-local lastHealths = {}
-local lastVehicleHealths = {}
-local violationCounts = {}
-local recentlyDamaged = {}
+local lastHealths            = {}
+local lastVehicleHealths     = {}
+local violationCounts        = {}
+local vehicleViolationCounts = {}
+local recentlyDamaged        = {}
+local recentlyDamagedVehicle = {}
 
 if returnClaireSetting("godmodeDetection") then
 
-    function checkGodmode(player)
-        if not isElement(player) then return end
+    local function resetPlayer(p)
+        violationCounts[p]        = nil
+        lastHealths[p]            = nil
+        lastVehicleHealths[p]     = nil
+        vehicleViolationCounts[p] = nil
+    end
 
-        local serial = getPlayerSerial(player)
-        if isSerialWhitelisted(serial) then return end
+    local function punish(p, msg)
+        clairePunish(p, msg)
+        resetPlayer(p)
+    end
 
-        if isPedInVehicle(player) then
-            local vehicle = getPedOccupiedVehicle(player)
-            if not isElement(vehicle) then return end
+    local function checkPlayer(p)
+        local h = getElementHealth(p)
+        if not h or h <= 0 then
+            resetPlayer(p)
+            return
+        end
 
-            local vHealth = getElementHealth(vehicle)
-            if not vHealth or vHealth <= 300 then
-                lastVehicleHealths[player] = nil
-                violationCounts[player] = 0
-                return
-            end
+        if h > 200 then
+            punish(p, "Claire: Godmode detected (health too high)")
+            return
+        end
 
-            if vHealth >= vehicleMinThreshold and vHealth < 1000 then
-                local lastVHealth = lastVehicleHealths[player]
-                if lastVHealth and vHealth == lastVHealth then
-                    local currentViolations = violationCounts[player] or 0
-                    currentViolations = currentViolations + 1
-
-                    if currentViolations >= tolerance then
-                        clairePunish(player, "Claire: Vehicle godmode detected")
-                        violationCounts[player] = nil
-                    else
-                        violationCounts[player] = currentViolations
-                    end
-                else
-                    violationCounts[player] = 0
-                end
-
-                lastVehicleHealths[player] = vHealth
+        local last = lastHealths[p]
+        if last and math.abs(h - last) < eps and h >= 100 and recentlyDamaged[p] then
+            local v = (violationCounts[p] or 0) + 1
+            if v >= tolerance then
+                punish(p, "Claire: Godmode detected (health unchanged)")
             else
-                violationCounts[player] = 0
-                lastVehicleHealths[player] = nil
+                violationCounts[p] = v
             end
-
         else
-            local health = getElementHealth(player)
-            if not health or health <= 0 then
-                lastHealths[player] = nil
-                violationCounts[player] = 0
-                return
-            end
+            violationCounts[p] = nil
+        end
 
-            if health > 200 then
-                clairePunish(player, "Claire: Godmode detected (health too high)")
-                return
-            end
+        lastHealths[p] = h
+    end
 
-            local lastHealth = lastHealths[player]
-            if lastHealth and health == lastHealth and health >= 100 then
-                if recentlyDamaged[player] then
-                    local currentViolations = violationCounts[player] or 0
-                    currentViolations = currentViolations + 1
+    local function checkVehicle(p, v)
+        local vh = getElementHealth(v)
+        if not vh or vh <= 300 then
+            resetPlayer(p)
+            return
+        end
 
-                    if currentViolations >= tolerance then
-                        clairePunish(player, "Claire: Godmode detected (damaged but health unchanged)")
-                        violationCounts[player] = nil
-                    else
-                        violationCounts[player] = currentViolations
-                    end
-                else
-                    violationCounts[player] = 0
-                end
+        if vh < vehicleMinThreshold or vh >= 1000 then
+            resetPlayer(p)
+            return
+        end
+
+        local last = lastVehicleHealths[p]
+        if last and math.abs(vh - last) < eps and recentlyDamagedVehicle[v] then
+            local vCount = (vehicleViolationCounts[p] or 0) + 1
+            if vCount >= tolerance then
+                punish(p, "Claire: Vehicle godmode detected")
             else
-                violationCounts[player] = 0
+                vehicleViolationCounts[p] = vCount
             end
+        else
+            vehicleViolationCounts[p] = nil
+        end
 
-            lastHealths[player] = health
+        lastVehicleHealths[p] = vh
+    end
+
+    local function checkGodmode(p)
+        if not isElement(p) or isSerialWhitelisted(getPlayerSerial(p)) then return end
+        if isPedInVehicle(p) then
+            local v = getPedOccupiedVehicle(p)
+            if v then checkVehicle(p, v) end
+        else
+            checkPlayer(p)
         end
     end
 
     addEventHandler("onPlayerDamage", root, function()
         recentlyDamaged[source] = true
-        setTimer(function(player)
-            recentlyDamaged[player] = nil
-        end, 2000, 1, source)
+        setTimer(function(p) recentlyDamaged[p] = nil end, 2000, 1, source)
+    end)
+
+    addEventHandler("onVehicleDamage", root, function()
+        recentlyDamagedVehicle[source] = true
+        setTimer(function(v) recentlyDamagedVehicle[v] = nil end, 2000, 1, source)
+    end)
+
+    addEventHandler("onPlayerQuit", root, function()
+        resetPlayer(source)
     end)
 
     setTimer(function()
-        for _, player in ipairs(getElementsByType("player")) do
-            checkGodmode(player)
+        for _, p in ipairs(getElementsByType("player")) do
+            checkGodmode(p)
         end
     end, 2000, 0)
 end

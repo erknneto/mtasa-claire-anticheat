@@ -1,80 +1,67 @@
-local hitRateThreshold = returnClaireSetting("aimbotHitRateThreshold") or 0.9
-local minShots = returnClaireSetting("aimbotMinShots") or 50
-local tolerance = returnClaireSetting("aimbotTolerance") or 3
-local decayFactor = returnClaireSetting("aimbotDecayFactor") or 0.8
-local decayInterval = returnClaireSetting("aimbotDecayInterval") or 60000
-
-local playerStats = {}
-local lastShotTime = {}
-
 if returnClaireSetting("aimbotDetection") then
+    local hitRateThreshold   = tonumber(returnClaireSetting("aimbotHitRateThreshold")) or 0.9
+    local minimumShots       = tonumber(returnClaireSetting("aimbotMinShots")) or 50
+    local tolerance          = tonumber(returnClaireSetting("aimbotTolerance")) or 3
+    local decayInterval      = tonumber(returnClaireSetting("aimbotDecayInterval")) or 60000
 
-    function applyDecay(player)
-        local stats = playerStats[player]
-        if not stats then return end
+    local stats = {}
 
-        local last = lastShotTime[player]
-        if last and (getTickCount() - last > decayInterval) then
-            stats.shots = math.floor(stats.shots * decayFactor)
-            stats.hits = math.floor(stats.hits * decayFactor)
-            stats.violations = math.max(0, stats.violations - 1)
-            stats.totalRecentShots = math.floor(stats.totalRecentShots * decayFactor)
-            stats.recentSuspicious = false
-        end
+    local function resetPlayerStats(player)
+        stats[player] = { shots = 0, hits = 0, strikes = 0, lastCheck = getTickCount() }
+        return stats[player]
     end
 
-    addEventHandler("onPlayerWeaponFire", root, function(_, _, _, _, _, _, hitElement)
-        if not isElement(source) then return end
-        local serial = getPlayerSerial(source)
-        if isSerialWhitelisted(serial) then return end
+    addEventHandler("onPlayerWeaponFire", root, function(_, weapon, _, _, _, _, hit)
+        if isSerialWhitelisted(getPlayerSerial(source)) then return end
+        if weapon >= 16 and weapon <= 19 then return end
 
-        applyDecay(source)
+        local now = getTickCount()
+        local data = stats[source] or resetPlayerStats(source)
 
-        local stats = playerStats[source] or {
-            shots = 0, hits = 0,
-            violations = 0,
-            recentSuspicious = false,
-            totalRecentShots = 0
-        }
+        if now - data.lastCheck > decayInterval then
+            data.shots = math.floor(data.shots * 0.5)
+            data.hits  = math.floor(data.hits  * 0.5)
+            data.strikes = math.max(0, data.strikes - 1)
+        end
 
-        stats.shots = stats.shots + 1
-        stats.totalRecentShots = stats.totalRecentShots + 1
+        data.lastCheck = now
+        data.shots = data.shots + 1
 
-        if isElement(hitElement) then
-            local type = getElementType(hitElement)
-            if type == "player" then
-                stats.hits = stats.hits + 1
-            elseif type == "vehicle" and getVehicleOccupant(hitElement) then
-                stats.hits = stats.hits + 1
+        if isElement(hit) then
+            local hitType = getElementType(hit)
+            if hitType == "player" then
+                data.hits = data.hits + 1
+            elseif hitType == "vehicle" then
+                for i = 0, getVehicleMaxPassengers(hit) do
+                    if getVehicleOccupant(hit, i) then
+                        data.hits = data.hits + 1
+                        break
+                    end
+                end
             end
         end
 
-        lastShotTime[source] = getTickCount()
+        if data.shots >= minimumShots then
+            local rate = data.hits / data.shots
 
-        local effectiveMinShots = (stats.totalRecentShots > 100) and 30 or minShots
-        if stats.shots >= effectiveMinShots then
-            local hitRate = stats.hits / stats.shots
-
-            if hitRate >= hitRateThreshold then
-                stats.violations = stats.violations + 1
-                if stats.violations >= tolerance then
-                    clairePunish(source, "Claire: Aimbot detected (hit rate: " .. math.floor(hitRate * 100) .. "%)")
-                    stats.violations = 0
+            if rate >= hitRateThreshold then
+                data.strikes = data.strikes + 1
+                if data.strikes >= tolerance then
+                    clairePunish(source, "Claire: Aimbot detected (" .. math.floor(rate * 100) .. "%)")
+                    data.strikes = 0
                 end
-            elseif hitRate >= 0.85 then
-                if stats.recentSuspicious then
-                    stats.violations = stats.violations + 1
-                end
-                stats.recentSuspicious = true
             else
-                stats.violations = math.max(0, stats.violations - 1)
-                stats.recentSuspicious = false
+                data.strikes = math.max(0, data.strikes - 1)
             end
 
-            stats.shots = 0
-            stats.hits = 0
+            data.shots = 0
+            data.hits = 0
         end
 
-        playerStats[source] = stats
+        stats[source] = data
+    end)
+
+    addEventHandler("onPlayerQuit", root, function()
+        stats[source] = nil
     end)
 end
