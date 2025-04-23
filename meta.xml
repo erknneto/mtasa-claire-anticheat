@@ -1,5 +1,5 @@
 <meta>
-    <info author="Erknneto" version="1.1.3" name="Claire Anticheat" description="An anticheat for MTA:SA" type="script" />
+    <info author="Erknneto" version="1.1.4" name="Claire Anticheat" description="An anticheat for MTA:SA" type="script" />
     <min_mta_version server="1.6.0-9.22459" client="1.6.0-9.21695"></min_mta_version>
     
     <download_priority_group>9999</download_priority_group>
@@ -13,7 +13,6 @@
     <script src="client/movementanalyzer.lua" type="client" cache="false" />
     <script src="client/noclip.lua" type="client" cache="false" />
     <script src="client/projectile.lua" type="client" cache="false" />
-    <script src="client/spoofcheck.lua" type="client" cache="false" />
     <script src="client/teleport.lua" type="client" cache="false" />
     <script src="client/variablewatcher.lua" type="client" cache="false" />
     <script src="client/wallscan.lua" type="client" cache="false" />
@@ -35,7 +34,6 @@
     <script src="server/screenshot.lua" type="server" />
     <script src="server/serialspoof.lua" type="server" />
     <script src="server/speedhack.lua" type="server" />
-    <script src="server/spoofcheck.lua" type="server" />
     <script src="server/vehicletype.lua" type="server" />
     <script src="server/vpncheck.lua" type="server" />
     <script src="server/weapon_blocker.lua" type="server" />
