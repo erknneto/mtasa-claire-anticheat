@@ -1,7 +1,7 @@
 
 # **🔰 MTA:SA - Claire Anticheat**
 
-Claire is a modular, lightweight anticheat system for MTA:SA, designed to improve the integrity and fairness of servers. Its core philosophy is simple: organize detections into clean, independent modules, make them easy to configure, and build an open platform that others can expand and improve.
+Claire is a modular, lightweight anticheat resource for MTA:SA, designed to improve the integrity and fairness of servers. Its core philosophy is simple: organize detections into clean, independent modules, make them easy to configure, and build an open platform that others can expand and improve.
 
 Claire runs silently in the background, acting as a guardian layer — constantly monitoring player behavior, network conditions, and client-side integrity without interfering with gameplay or degrading performance. Its design favors discretion and precision, targeting cheats without disrupting legitimate users.
 
@@ -9,13 +9,11 @@ If you're looking for a solid, customizable way to secure your MTA:SA server, tr
 
 # **❓ Why does it matter?**
 
-Cheating has become a problem in MTA:SA, and there's a growing need for servers to expand their protection. Claire was created to address that — not as a closed or private solution, but as something open to everyone. By being fully open-source, Claire gives server owners an accessible and transparent tool to detect common exploits and improve their server environment. But more than that, it invites collaboration. The idea is that, together — through testing, feedback, improvements, and shared knowledge — we can create a more solid, trustworthy anticheat system that benefits the entire MTA community.
+By being fully open-source, Claire gives server owners an accessible and transparent tool to detect common exploits and improve their server environment. But more than that, it invites collaboration. The idea is that, together — through testing, feedback, improvements, and shared knowledge — we can create a more solid, trustworthy anticheat resource that benefits the entire MTA community.
 
 # **🛡️ Current features**
 
-Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact. False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is expected to be around 95%.
-
-Below is a full list of current features and their expected reliability:
+Claire currently includes over 20 independent detection modules, covering movement, combat, environment manipulation, network spoofing, and more. All detections are modular, configurable, and designed to operate silently in the background with minimal performance impact. False positives are rare thanks to tolerance-based logic, score systems, and heuristic analysis. Overall reliability across all modules is expected to be around 95%. Below is a full list of current features and their expected reliability:
 
 | Feature                      | Description                                                                                             | Confiability |
 |-----------------------------|---------------------------------------------------------------------------------------------------------|--------------|
@@ -51,9 +49,9 @@ Claire's current version is `1.1.5`, released on `2025/04/22`, it brings a wide 
 
 ## **📦 Installation**
 
-👉 download from MTA Community: [resource - updated 2025/04/22](https://community.multitheftauto.com/index.php?p=resources&s=details&id=18996)
+Download from MTA Community: [latest release - 1.1.5 from 2025/04/22](https://community.multitheftauto.com/index.php?p=resources&s=details&id=18996)
 
-👉 download from GitHub: [source-code - always up-to-date](https://github.com/erknneto/mtasa-claire-anticheat/archive/refs/heads/main.zip)
+Download from GitHub: [latest release - 1.1.5 from 2025/04/22](https://github.com/erknneto/mtasa-claire-anticheat/releases/tag/1.1.5)
 
 1. Copy the `claire` resource folder to your MTA server’s `resources` directory.
 2. Ensure `claire` is included in your `mtaserver.conf` or started via `start claire`.
@@ -66,7 +64,11 @@ Open `config.lua` to enable/disable modules and adjust tolerances, every setting
 
 ## **👨‍💻 Contributing**
 
-Claire is aimed to be an open-source project. Feel free to contribute with PRs, reports, or suggestions.
+Claire is an open-source project — contributions are welcome!
+
+Feel free to open PRs, report issues, or share your suggestions. You can also reach out to us on [Discord](https://discord.gg/6Pk3Bt4da6).
+
+---
 
 <p align="center">
   <img src="https://i.imgur.com/Q5ixtO8.png" alt="MTA:SA - Claire Anticheat" width="700">
