@@ -1,6 +1,6 @@
 if returnClaireSetting("pingDetection") then
     local maxPing         = tonumber(returnClaireSetting("pingMax")) or 350
-    local maxPacketLoss   = tonumber(returnClaireSetting("packetLossMax")) or 0.33
+    local maxPacketLoss   = tonumber(returnClaireSetting("packetLossMax")) or 33
 
     local pingFails       = {}
     local packetFails     = {}
