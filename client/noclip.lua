@@ -1,54 +1,49 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("noclipDetection") then return end
+	
+    local minHeight        = math.max(5, returnClaireSetting("noclipDetectionMinHeight") or 5)
+    local maxScore         = returnClaireSetting("noclipDetectionMaxScore") or 5
+    local moveScoreLimit   = returnClaireSetting("noclipDetectionMoveScore") or 6
 
-    local minHeight = returnClaireSetting("noclipDetectionMinHeight") or 7
-    local maxScore = returnClaireSetting("noclipDetectionMaxScore") or 5
-    local moveScoreLimit = returnClaireSetting("noclipDetectionMoveScore") or 6
-
-    local score = 0
-    local moveScore = 0
-    local lastSent = 0
-    local lastPosition = nil
-    local stillFrames = 0
-    local noGroundFrames = 0
-    local airDistance = 0.0
+    local score            = 0
+    local moveScore        = 0
+    local lastSent         = 0
+    local lastPosition     = nil
+    local stillFrames      = 0
+    local noGroundFrames   = 0
+    local airDistance      = 0.0
 
     setTimer(function()
-        local x, y, z = getElementPosition(localPlayer)
-        local _, _, vz = getElementVelocity(localPlayer)
+        local x, y, z       = getElementPosition(localPlayer)
+        local _, _, vz      = getElementVelocity(localPlayer)
 
         if isPedInVehicle(localPlayer) or isPedWearingJetpack(localPlayer) or isElementInWater(localPlayer) then
-            score = 0
-            moveScore = 0
-            stillFrames = 0
-            noGroundFrames = 0
-            airDistance = 0.0
+            score, moveScore, stillFrames, noGroundFrames, airDistance = 0, 0, 0, 0, 0.0
             return
         end
 
         local task = getPedSimplestTask(localPlayer)
         if task == "TASK_SIMPLE_CLIMB" then
-            score = 0
-            moveScore = 0
-            stillFrames = 0
-            noGroundFrames = 0
-            airDistance = 0.0
+            score, moveScore, stillFrames, noGroundFrames, airDistance = 0, 0, 0, 0, 0.0
             return
         end
 
-        if z < minHeight or vz < -0.05 then
-            score = 0
-            moveScore = 0
-            stillFrames = 0
-            noGroundFrames = 0
-            airDistance = 0.0
+        if vz < -0.05 then
+            score, moveScore, stillFrames, noGroundFrames, airDistance = 0, 0, 0, 0, 0.0
             return
         end
 
         local hasGroundSupport = isPedOnGround(localPlayer)
+        local groundZ = getGroundPosition(x, y, z)
+        local heightDiff = groundZ and (z - groundZ) or 0
+
         if not hasGroundSupport then
-            local hit, _, _, _, hitElement = processLineOfSight(x, y, z, x, y, z - 15, true, true, false, true, false, false, false)
-            hasGroundSupport = hit and hitElement
+            local hit, _, _, _, hitElement = processLineOfSight(x, y, z, x, y, z - minHeight, true, true, false, true, false, false, false)
+            if hit then
+                hasGroundSupport = true
+            elseif groundZ and groundZ ~= 0 and heightDiff < minHeight then
+                hasGroundSupport = true
+            end
         end
 
         if not hasGroundSupport then
@@ -59,9 +54,7 @@ claireRegisterOnSettingsReady(function()
         end
 
         if noGroundFrames < 4 then
-            score = 0
-            moveScore = 0
-            stillFrames = 0
+            score, moveScore, stillFrames = 0, 0, 0
             return
         end
 
@@ -79,29 +72,21 @@ claireRegisterOnSettingsReady(function()
             airDistance = airDistance + frameDist
         end
 
-        -- reset if touching ground again
         if hasGroundSupport then
-            score = 0
-            moveScore = 0
-            stillFrames = 0
-            airDistance = 0.0
+            score, moveScore, stillFrames, airDistance = 0, 0, 0, 0.0
             return
         end
 
-        -- still + grounded = not noclip
         if not moving and math.abs(vz) < 0.01 and hasGroundSupport then
             stillFrames = stillFrames + 1
             if stillFrames >= 3 then
-                score = 0
-                moveScore = 0
-                stillFrames = 0
+                score, moveScore, stillFrames = 0, 0, 0
                 return
             end
         else
             stillFrames = 0
         end
 
-        -- delayed scoring only if time in air already accumulated
         if noGroundFrames >= 4 then
             if moving then
                 moveScore = moveScore + 1
@@ -115,8 +100,7 @@ claireRegisterOnSettingsReady(function()
         if (score >= maxScore or moveScore >= moveScoreLimit) and getTickCount() - lastSent > 1000 then
             triggerServerEvent("clairePunish", localPlayer, "Claire: Noclip detected")
             lastSent = getTickCount()
-            score = 0
-            moveScore = 0
+            score, moveScore = 0, 0
         end
     end, 500, 0)
 end)
