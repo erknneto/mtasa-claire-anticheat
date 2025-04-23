@@ -59,7 +59,7 @@ claireSettings = {
     -- Network
     {"pingDetection", true}, -- detects players with high ping or packet loss. Confiability: 95%. Risk: very low. Recommended: true.
     {"pingMax", 350}, -- max ping in ms. Punish after 3 intervals. Recommended: 300–400.
-    {"packetLossMax", 0.33}, -- max allowed packet loss ratio. Recommended: 0.25–0.35.
+    {"packetLossMax", 33}, -- max allowed packet loss ratio. Recommended: 25–35.
 
     -- World / Environment
     {"worldScanDetection", true}, -- restores world/game properties like gravity and game speed. Confiability: 98%. Risk: none. Recommended: true.
