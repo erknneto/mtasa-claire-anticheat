@@ -1,69 +1,72 @@
 if returnClaireSetting("pingDetection") then
-    local maxPing         = tonumber(returnClaireSetting("pingMax")) or 400
-    local pingTolerance   = tonumber(returnClaireSetting("pingTolerance")) or 5
-    local maxPacketLoss   = tonumber(returnClaireSetting("packetLossMax")) or 0.15
-    local lossTolerance   = tonumber(returnClaireSetting("packetLossTolerance")) or 3
-    local gracePeriod     = 10000
-    local checkInterval   = 2000
+    local maxPing         = tonumber(returnClaireSetting("pingMax")) or 350
+    local maxPacketLoss   = tonumber(returnClaireSetting("packetLossMax")) or 0.33
 
-    local joinTime        = {}
-    local pingViolations  = {}
-    local lossViolations  = {}
-
-    addEventHandler("onPlayerJoin", root, function()
-        joinTime[source] = getTickCount()
-    end)
+    local pingFails       = {}
+    local packetFails     = {}
+    local pingReset       = {}
+    local packetReset     = {}
 
     addEventHandler("onPlayerQuit", root, function()
-        joinTime[source]       = nil
-        pingViolations[source] = nil
-        lossViolations[source] = nil
+        pingFails[source]    = nil
+        packetFails[source]  = nil
+        if isTimer(pingReset[source]) then killTimer(pingReset[source]) end
+        if isTimer(packetReset[source]) then killTimer(packetReset[source]) end
+        pingReset[source]    = nil
+        packetReset[source]  = nil
     end)
 
-    local function inGracePeriod(player)
-        local t = joinTime[player]
-        return t and (getTickCount() - t < gracePeriod)
-    end
+    local function checkPlayerPing(p)
+        if getPlayerPing(p) >= maxPing then
+            pingFails[p] = (pingFails[p] or 0) + 1
 
-    local function checkPlayerPing(player)
-        if inGracePeriod(player) then return end
+            if pingFails[p] >= 3 then
+                clairePunish(p, "Claire: High ping")
+                return
+            end
 
-        local ping = getPlayerPing(player)
-        if ping and ping > maxPing then
-            pingViolations[player] = (pingViolations[player] or 0) + 1
-            if pingViolations[player] >= pingTolerance then
-                clairePunish(player, "Claire: High ping (" .. ping .. " ms)")
-                pingViolations[player] = nil
+            if not isTimer(pingReset[p]) then
+                pingReset[p] = setTimer(function()
+                    if isElement(p) then
+                        pingFails[p] = 0
+                    end
+                end, 60000, 1)
             end
         else
-            pingViolations[player] = nil
+            pingFails[p] = 0
         end
     end
 
-    local function checkPlayerPacketLoss(player)
-        if inGracePeriod(player) then return end
-
-        local stats = getNetworkStats(player)
-        if not stats or stats.packetlossLastSecond == nil then return end
+    local function checkPlayerPacketLoss(p)
+        local stats = getNetworkStats(p)
+        if not stats or not stats.packetlossLastSecond then return end
 
         if stats.packetlossLastSecond > maxPacketLoss then
-            lossViolations[player] = (lossViolations[player] or 0) + 1
-            if lossViolations[player] >= lossTolerance then
-                clairePunish(player, "Claire: High packet loss (" ..
-                    math.floor(stats.packetlossLastSecond * 100) .. "%)")
-                lossViolations[player] = nil
+            packetFails[p] = (packetFails[p] or 0) + 1
+
+            if packetFails[p] >= 3 then
+                clairePunish(p, "Claire: High packet loss")
+                return
+            end
+
+            if not isTimer(packetReset[p]) then
+                packetReset[p] = setTimer(function()
+                    if isElement(p) then
+                        packetFails[p] = 0
+                    end
+                end, 60000, 1)
             end
         else
-            lossViolations[player] = nil
+            packetFails[p] = 0
         end
     end
 
     setTimer(function()
-        for _, player in ipairs(getElementsByType("player")) do
-            if not isSerialWhitelisted(getPlayerSerial(player)) then
-                checkPlayerPing(player)
-                checkPlayerPacketLoss(player)
+        for _, p in ipairs(getElementsByType("player")) do
+            if not isSerialWhitelisted(getPlayerSerial(p)) then
+                checkPlayerPing(p)
+                checkPlayerPacketLoss(p)
             end
         end
-    end, checkInterval, 0)
+    end, 3000, 0)
 end
