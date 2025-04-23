@@ -47,7 +47,7 @@ Below is a full list of current features and their expected reliability:
 
 ## **🏷️ Current version**
 
-Claire's current version is `1.1.4`, released on `2025/04/22`, it brings a wide range of improvements and stability fixes across all modules, with a special focus on the noclip, aimbot, and teleport detection systems. This update enhances overall reliability, reduces false positives, and improves compatibility with legitimate server-side systems.
+Claire's current version is `1.1.5`, released on `2025/04/22`, it brings a wide range of improvements and stability fixes across all modules, with a special focus on the noclip, aimbot, and teleport detection systems. This update enhances overall reliability, reduces false positives, and improves compatibility with legitimate server-side systems.
 
 ## **📦 Installation**
 
