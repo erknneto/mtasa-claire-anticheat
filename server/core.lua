@@ -5,7 +5,7 @@ function clairePunish(player, reason)
 
     local serial = getPlayerSerial(player)
     if isSerialWhitelisted(serial) then return end
-    if punishedPlayers[player] then return end -- Already being punished
+    if punishedPlayers[player] then return end
 
     punishedPlayers[player] = true
 
