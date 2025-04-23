@@ -1,19 +1,22 @@
 claireRegisterOnSettingsReady(function()
     if not returnClaireSetting("teleportDetection") then return end
 
-    local maxDistance = returnClaireSetting("teleportMaxDistance") or 50
-    local tolerance = returnClaireSetting("teleportTolerance") or 2
-    local graceAfterSpawn = returnClaireSetting("teleportGraceAfterSpawn") or 5000
+    local maxDistance        = returnClaireSetting("teleportMaxDistance") or 50
+    local tolerance          = returnClaireSetting("teleportTolerance") or 2
+    local graceAfterSpawn    = returnClaireSetting("teleportGraceAfterSpawn") or 5000
 
-    local teleportScore = 0
-    local lastSent = 0
+    local teleportScore      = 0
+    local lastSent           = 0
     local lastPlayerPosition = nil
     local lastVehiclePosition = nil
-    local lastSpawnTime = getTickCount()
+    local lastSpawnTime      = getTickCount()
     local enteringDistantVehicle = false
-    local stillFrames = 0
-    local lastFallTime = 0
+    local stillFrames        = 0
+    local lastFallTime       = 0
     local vehicleFallCooldown = 2000
+
+    local lastInterior       = getElementInterior(localPlayer)
+    local lastDimension      = getElementDimension(localPlayer)
 
     local function resetTeleportState()
         teleportScore = 0
@@ -45,6 +48,16 @@ claireRegisterOnSettingsReady(function()
 
         local now = getTickCount()
         if now - lastSpawnTime < graceAfterSpawn then return end
+
+        local currentInterior = getElementInterior(localPlayer)
+        local currentDimension = getElementDimension(localPlayer)
+
+        if currentInterior ~= lastInterior or currentDimension ~= lastDimension then
+            lastInterior = currentInterior
+            lastDimension = currentDimension
+            resetTeleportState()
+            return
+        end
 
         local inVehicle = isPedInVehicle(localPlayer)
         local x, y, z = getElementPosition(localPlayer)
