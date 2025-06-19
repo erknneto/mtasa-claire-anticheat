@@ -64,9 +64,11 @@ Open `config.lua` to enable/disable modules and adjust tolerances, every setting
 
 ## **👨‍💻 Contributing**
 
-Claire is an open-source project — contributions are welcome!
+Claire is an open-source project — contributions are welcome! Feel free to open PRs, report issues, or share your suggestions.
 
-Feel free to open PRs, report issues, or share your suggestions. You can also reach out to us on [Discord](https://discord.gg/6Pk3Bt4da6).
+I'm mostly online on [Steam](http://steamcommunity.com/profiles/76561198087901407), but you can also reach out to me on [Discord](https://discord.gg/6Pk3Bt4da6).
+
+🇧🇷 - E para os brasileiros de plantão, caso você queira ajudar, ou conversar alguma coisa sobre o projeto, entre em contato comigo pelos links acima, abraços.
 
 ---
 
